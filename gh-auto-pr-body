@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -e
+
+if ! type -p sed >/dev/null; then
+  echo "sed not found on the system" >&2
+  exit 1
+fi
+if ! type -p jq >/dev/null; then
+  echo "jq not found on the system" >&2
+  exit 1
+fi
+
+gh pr edit --body-file <(gh pr view --json commits | jq -r '.commits[].messageHeadline' | sed 's/^/- /g')
